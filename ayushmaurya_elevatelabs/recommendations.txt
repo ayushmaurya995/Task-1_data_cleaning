@@ -1,0 +1,30 @@
+Summary & Recommendations
+=========================
+
+Total rows: 2823
+Total columns: 25
+Total sales (sum): 10,032,628.85
+Unique orders (ORDERNUMBER): 307
+Most common order status: Shipped
+
+Key data quality issues found:
+- Total duplicate rows: 0
+- Duplicate ORDERNUMBER+ORDERLINENUMBER combos: 0
+- Sales mismatches (SALES != QUANTITYORDERED*PRICEEACH): 1304 rows (46.19%)
+
+Recommended immediate cleaning steps:
+- Convert ORDERDATE to proper datetime and verify timezone/format.
+- Fix sales mismatches: recalculate SALES where possible using QUANTITYORDERED*PRICEEACH.
+- Handle missing values per-column (drop, impute, or flag) depending on business rules.
+- Remove exact duplicate rows, and investigate duplicate order-line combinations.
+- Standardize categorical values (e.g., STATUS) and trim whitespace.
+
+Postgres import suggestion:
+1) Create table with appropriate data types (INTEGER, NUMERIC, VARCHAR, TIMESTAMP).
+2) Use COPY from CSV to load into Postgres: COPY sales FROM '/path/sales_data_sample.csv' CSV HEADER;
+3) Add indexes on ORDERNUMBER, CUSTOMERNAME, ORDERDATE for faster queries.
+
+Excel cleaning tips:
+- Use 'Text to Columns' for splitting combined fields, use DATEVALUE for dates.
+- Use filters to find blanks and duplicates (Remove Duplicates tool).
+- Use formulas to recompute sales: =QUANTITYORDERED*PRICEEACH and compare.
